@@ -1,23 +1,34 @@
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "4.12.0"
-    }
-  }
-}
-
-provider "google" {
-  # Configuration options
-  project = "terraform-335007"
-  region  = "asia-northeast1"
-  zone    = "asia-northeast1-b"
-  credentials = "keys.json"
-}
 
 resource "google_storage_bucket" "GCS1" {
-  name = "bucket-from-tf-using-service-account"
+  
+  name = "tf-course-bucket-from-terraform"
+  storage_class = "NEARLINE"
   location = "ASIA-NORTHEAST1"
+  labels = {
+    "env" = "tf_env"
+    "dep" = "complience"
+  }
+  uniform_bucket_level_access = true
+
+  lifecycle_rule {
+    condition {
+      age = 5
+    }
+    action {
+      type = "SetStorageClass"
+      storage_class = "COLDLINE"
+    }
+  }
+
+  retention_policy {
+    is_locked = true
+    retention_period = 864000
+  }
 
 }
 
+resource "google_storage_bucket_object" "picture" {
+  name = "vodafone_logo"
+  bucket = google_storage_bucket.GCS1.name
+  source = "vodafone.jpg"
+}
