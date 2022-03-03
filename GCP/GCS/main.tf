@@ -3,7 +3,7 @@ resource "google_storage_bucket" "GCS1" {
   
   name = "tf-course-bucket-from-terraform"
   storage_class = "NEARLINE"
-  location = "US-CENTRAL1"
+  location = "ASIA-NORTHEAST1"
   labels = {
     "env" = "tf_env"
     "dep" = "complience"
